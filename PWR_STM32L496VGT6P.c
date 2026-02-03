@@ -173,6 +173,13 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
         HAL_DBGMCU_DisableDBGStopMode( );
         HAL_DBGMCU_DisableDBGStandbyMode( );
 
+        KERNEL_Status_t KERNEL_Status = KERNEL_Status_Success;
+        KERNEL_ResetReason_t KERNEL_ResetReason = KERNEL_ResetReason_Cleared;
+        if ( ( KERNEL_Status = KERNEL_GetResetReason( &KERNEL_ResetReason ) ) != KERNEL_Status_Success )
+        {
+            // FIXME Couldn't get reset reason !
+        }
+
         // TODO On Power-up Handling
         // TODO Restore Modules Contexts/Configurations
     }
