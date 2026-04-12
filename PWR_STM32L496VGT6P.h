@@ -101,9 +101,9 @@ extern "C"
     /**
      *  @brief PWR STM32L496VGT6P Instance Context
      *
-     *  @struct PWR_STM32L496VGT6P_Instance_Context_t
+     *  @struct PWR_STM32L496VGT6P_InstanceContext_t
      */
-    typedef struct PWR_STM32L496VGT6P_Instance_Context PWR_STM32L496VGT6P_Instance_Context_t;
+    typedef struct PWR_STM32L496VGT6P_InstanceContext PWR_STM32L496VGT6P_InstanceContext_t;
 
     /**
      *  @brief PWR STM32L496VGT6P Instance
@@ -115,7 +115,7 @@ extern "C"
         PWR_STM32L496VGT6P_t PWRx;
 
         // Managed Internally
-        PWR_STM32L496VGT6P_Instance_Context_t * Context;
+        PWR_STM32L496VGT6P_InstanceContext_t * Context;
     } PWR_STM32L496VGT6P_Instance_t;
 
     // #############################################################################

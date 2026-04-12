@@ -63,15 +63,15 @@
 // #### Private Type(s) ########################################################
 // #############################################################################
 
-typedef struct PWR_STM32L496VGT6P_Instance_Context
+typedef struct PWR_STM32L496VGT6P_InstanceContext
 {
     PWR_STM32L496VGT6P_Mode_t Mode;
-} PWR_STM32L496VGT6P_Instance_Context_t;
+} PWR_STM32L496VGT6P_InstanceContext_t;
 
 typedef struct PWR_STM32L496VGT6P_Context
 {
     TIM_Timestamp_t Timestamp;
-    PWR_STM32L496VGT6P_Instance_Context_t Context[ PWR_STM32L496VGT6P_Count ];
+    PWR_STM32L496VGT6P_InstanceContext_t Context[ PWR_STM32L496VGT6P_Count ];
 } PWR_STM32L496VGT6P_Context_t;
 
 // #############################################################################
@@ -151,7 +151,7 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
             break;
         }
 
-        PWR_STM32L496VGT6P_Instance_Context_t * Context = &PWR_STM32L496VGT6P_Context.Context[ Instance->PWRx ];
+        PWR_STM32L496VGT6P_InstanceContext_t * Context = &PWR_STM32L496VGT6P_Context.Context[ Instance->PWRx ];
 
         Context->Mode = PWR_STM32L496VGT6P_Mode_Run;
 
