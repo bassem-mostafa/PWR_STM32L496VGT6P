@@ -98,35 +98,15 @@ extern "C"
         PWR_STM32L496VGT6P_Mode_Shutdown, ///< Shutdown
     } PWR_STM32L496VGT6P_Mode_t;
 
-    /**
-     *  @brief PWR STM32L496VGT6P Instance Context
-     *
-     *  @struct PWR_STM32L496VGT6P_InstanceContext_t
-     */
-    typedef struct PWR_STM32L496VGT6P_InstanceContext PWR_STM32L496VGT6P_InstanceContext_t;
-
-    /**
-     *  @brief PWR STM32L496VGT6P Instance
-     *
-     *  @struct PWR_STM32L496VGT6P_Instance_t
-     */
-    typedef struct PWR_STM32L496VGT6P_Instance
-    {
-        PWR_STM32L496VGT6P_t PWRx;
-
-        // Managed Internally
-        PWR_STM32L496VGT6P_InstanceContext_t * Context;
-    } PWR_STM32L496VGT6P_Instance_t;
-
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
 
-    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_Instance_t * Instance );
-    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_Instance_t * Instance );
-    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_Instance_t * Instance );
+    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_t PWRx );
+    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_t PWRx );
+    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_t PWRx );
 
-    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_SetMode( PWR_STM32L496VGT6P_Instance_t * Instance, PWR_STM32L496VGT6P_Mode_t Mode );
+    PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode );
 
     // TODO Add More APIs
 

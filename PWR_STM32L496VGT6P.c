@@ -82,11 +82,11 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Initialize( void )
 static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Cycle( void );
 static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_DeInitialize( void );
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_Instance_t * Instance );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_Instance_t * Instance );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_Instance_t * Instance );
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_t PWRx );
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_t PWRx );
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_t PWRx );
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_Instance_t * Instance, PWR_STM32L496VGT6P_Mode_t Mode );
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode );
 
 // #############################################################################
 // #### Private Variable(s) ####################################################
@@ -137,25 +137,17 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_DeInitialize( void
     return Status;
 }
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_Instance_t * Instance )
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_t PWRx )
 {
     PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
 
     do
     {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
-
-        PWR_STM32L496VGT6P_InstanceContext_t * Context = &PWR_STM32L496VGT6P_Context.Context[ Instance->PWRx ];
+        PWR_STM32L496VGT6P_InstanceContext_t * Context = &PWR_STM32L496VGT6P_Context.Context[ PWRx ];
 
         Context->Mode = PWR_STM32L496VGT6P_Mode_Run;
-
-        Instance->Context = Context;
 
         // FIXME Review the following
         // HAL_PWREx_EnableBORPVD_ULP();
@@ -188,18 +180,13 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
     return Status;
 }
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_Instance_t * Instance )
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_t PWRx )
 {
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Error;
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+
     do
     {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
-
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
         // TODO Determine these operation location, possible location to be into the PORT itself
         // TODO Retrieve Hardware Status
@@ -240,37 +227,32 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L
         // TODO Enter Lowest ALLOWED power mode
         // TODO On Wake-up Handling
         // TODO Restore Modules Contexts
-        Status = PWR_STM32L496VGT6P_Status_Success;
-    }
-    while ( 0 );
-    return Status;
-}
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_Instance_t * Instance )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
     }
     while ( 0 );
 
     return Status;
 }
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_Instance_t * Instance, PWR_STM32L496VGT6P_Mode_t Mode )
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_t PWRx )
 {
     PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+
     do
     {
-        PWR_Trace( "%s( Instance=%p, Mode=%d )", __FUNCTION__, Instance, Mode );
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
+    }
+    while ( 0 );
 
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
+    return Status;
+}
+
+static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode )
+{
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+
+    do
+    {
+        PWR_Trace( "%s( PWRx=%d, Mode=%d )", __FUNCTION__, PWRx, Mode );
 
         switch ( Mode )
         {
@@ -324,26 +306,20 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM3
 // #### Public Method(s) #######################################################
 // #############################################################################
 
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_Instance_t * Instance )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_t PWRx )
 {
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Error;
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
 
     do
     {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
-
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
         if ( ( Status = PWR_STM32L496VGT6P_Context_Initialize( ) ) != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
 
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_Initialize( Instance ) ) != PWR_STM32L496VGT6P_Status_Success )
+        if ( ( Status = PWR_STM32L496VGT6P_Instance_Initialize( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
@@ -353,31 +329,19 @@ PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_In
     return Status;
 }
 
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_Instance_t * Instance )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_t PWRx )
 {
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Error;
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
     do
     {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
-
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
-
-        if ( Instance->Context == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_Error;
-            break;
-        }
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
         if ( ( Status = PWR_STM32L496VGT6P_Context_Cycle( ) ) != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
 
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_Cycle( Instance ) ) != PWR_STM32L496VGT6P_Status_Success )
+        if ( ( Status = PWR_STM32L496VGT6P_Instance_Cycle( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
@@ -387,27 +351,15 @@ PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_Instanc
     return Status;
 }
 
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_Instance_t * Instance )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_t PWRx )
 {
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Error;
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
 
     do
     {
-        PWR_Trace( "%s( Instance=%p )", __FUNCTION__, Instance );
+        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
-        if ( Instance == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_ArgumentInvalid;
-            break;
-        }
-
-        if ( Instance->Context == NULL )
-        {
-            Status = PWR_STM32L496VGT6P_Status_Error;
-            break;
-        }
-
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_DeInitialize( Instance ) ) != PWR_STM32L496VGT6P_Status_Success )
+        if ( ( Status = PWR_STM32L496VGT6P_Instance_DeInitialize( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
@@ -422,15 +374,18 @@ PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_
     return Status;
 }
 
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_SetMode( PWR_STM32L496VGT6P_Instance_t * Instance, PWR_STM32L496VGT6P_Mode_t Mode )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode )
 {
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Error;
+    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+
     do
     {
-        PWR_Trace( "%s( Instance=%p, Mode=%d )", __FUNCTION__, Instance, Mode );
-        Status = PWR_STM32L496VGT6P_Instance_SetMode( Instance, Mode );
+        PWR_Trace( "%s( PWRx=%d, Mode=%d )", __FUNCTION__, PWRx, Mode );
+
+        Status = PWR_STM32L496VGT6P_Instance_SetMode( PWRx, Mode );
     }
     while ( 0 );
+
     return Status;
 }
 
