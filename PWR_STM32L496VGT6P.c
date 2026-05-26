@@ -70,7 +70,6 @@ typedef struct PWR_STM32L496VGT6P_InstanceContext
 
 typedef struct PWR_STM32L496VGT6P_Context
 {
-    TIM_Timestamp_t Timestamp;
     PWR_STM32L496VGT6P_InstanceContext_t Context[ PWR_STM32L496VGT6P_Count ];
 } PWR_STM32L496VGT6P_Context_t;
 
@@ -105,6 +104,8 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Initialize( void )
     do
     {
         PWR_Trace( "%s( void )", __FUNCTION__ );
+
+        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
     }
     while ( 0 );
 
@@ -118,6 +119,8 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Cycle( void )
     do
     {
         PWR_Trace( "%s( void )", __FUNCTION__ );
+
+        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
     }
     while ( 0 );
 
@@ -131,6 +134,8 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_DeInitialize( void
     do
     {
         PWR_Trace( "%s( void )", __FUNCTION__ );
+
+        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
     }
     while ( 0 );
 
@@ -167,12 +172,13 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
 
         KERNEL_Status_t KERNEL_Status = KERNEL_Status_Success;
         KERNEL_ResetReason_t KERNEL_ResetReason = KERNEL_ResetReason_Cleared;
-        if ( ( KERNEL_Status = KERNEL_GetResetReason( &KERNEL_ResetReason ) ) != KERNEL_Status_Success )
+        if ( ( KERNEL_Status = KERNEL_GetResetReason( KERNEL_Null, &KERNEL_ResetReason ) ) != KERNEL_Status_Success )
         {
             // FIXME Couldn't get reset reason !
         }
 
         // TODO On Power-up Handling
+        // TODO Notify KERNEL of exiting power mode
         // TODO Restore Modules Contexts/Configurations
     }
     while ( 0 );
