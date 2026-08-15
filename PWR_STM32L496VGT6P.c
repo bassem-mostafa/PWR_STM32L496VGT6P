@@ -63,29 +63,19 @@
 // #### Private Type(s) ########################################################
 // #############################################################################
 
-typedef struct PWR_STM32L496VGT6P_InstanceContext
+typedef struct PWR_STM32L496VGT6P_Instance
 {
     PWR_STM32L496VGT6P_Mode_t Mode;
-} PWR_STM32L496VGT6P_InstanceContext_t;
+} PWR_STM32L496VGT6P_Instance_t;
 
 typedef struct PWR_STM32L496VGT6P_Context
 {
-    PWR_STM32L496VGT6P_InstanceContext_t Context[ PWR_STM32L496VGT6P_Count ];
+    PWR_STM32L496VGT6P_Instance_t Instance[ PWR_STM32L496VGT6P_Count ];
 } PWR_STM32L496VGT6P_Context_t;
 
 // #############################################################################
 // #### Private Method(s) Prototype ############################################
 // #############################################################################
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Initialize( void );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Cycle( void );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_DeInitialize( void );
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_t PWRx );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_t PWRx );
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_t PWRx );
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode );
 
 // #############################################################################
 // #### Private Variable(s) ####################################################
@@ -97,52 +87,11 @@ static PWR_STM32L496VGT6P_Context_t PWR_STM32L496VGT6P_Context;
 // #### Private Method(s) ######################################################
 // #############################################################################
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Initialize( void )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+// #############################################################################
+// #### Public Method(s) #######################################################
+// #############################################################################
 
-    do
-    {
-        PWR_Trace( "%s( void )", __FUNCTION__ );
-
-        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_Cycle( void )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( void )", __FUNCTION__ );
-
-        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Context_DeInitialize( void )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( void )", __FUNCTION__ );
-
-        UTIL_UNUSED( PWR_STM32L496VGT6P_Context );
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_STM32L496VGT6P_t PWRx )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_t PWRx )
 {
     PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
 
@@ -150,16 +99,14 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
     {
         PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
-        PWR_STM32L496VGT6P_InstanceContext_t * Context = &PWR_STM32L496VGT6P_Context.Context[ PWRx ];
-
-        Context->Mode = PWR_STM32L496VGT6P_Mode_Run;
+        PWR_STM32L496VGT6P_Instance_t * Instance = &PWR_STM32L496VGT6P_Context.Instance[ PWRx ];
 
         // FIXME Review the following
         // HAL_PWREx_EnableBORPVD_ULP();
         __HAL_FLASH_SLEEP_POWERDOWN_ENABLE( );
-        // __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
+        __HAL_RCC_WAKEUPSTOP_CLK_CONFIG( RCC_STOP_WAKEUPCLOCK_MSI );
 
-        // TODO: Disable peripherals clock before enter sleep mode (IF POSSIBLE)
+        // Disable peripherals clock before enter sleep mode (IF POSSIBLE)
         __HAL_RCC_FLASH_CLK_SLEEP_DISABLE( );
         __HAL_RCC_SRAM1_CLK_SLEEP_DISABLE( );
         __HAL_RCC_SRAM2_CLK_SLEEP_DISABLE( );
@@ -170,100 +117,100 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Initialize( PWR_S
         HAL_DBGMCU_DisableDBGStopMode( );
         HAL_DBGMCU_DisableDBGStandbyMode( );
 
-        KERNEL_Status_t KERNEL_Status = KERNEL_Status_Success;
-        KERNEL_ResetReason_t KERNEL_ResetReason = KERNEL_ResetReason_Cleared;
-        if ( ( KERNEL_Status = KERNEL_GetResetReason( PLATFORM_DEFAULT_KERNEL, &KERNEL_ResetReason ) ) != KERNEL_Status_Success )
-        {
-            // FIXME Couldn't get reset reason !
-        }
+        // TODO The following block should exist in every module that has a context the must persist after shutdown mode exits
+        // TODO By which every module could determine the reset reason either it was from a shutdown or else
+        // TODO In case of shutdown reset, every module should restore its own context (if any)
+        //
+        //     KERNEL_Status_t KERNEL_Status = KERNEL_Status_Success;
+        //     KERNEL_ResetReason_t KERNEL_ResetReason = KERNEL_ResetReason_Cleared;
+        //     if ( ( KERNEL_Status = KERNEL_GetResetReason( PLATFORM_DEFAULT_KERNEL, &KERNEL_ResetReason ) ) != KERNEL_Status_Success )
+        //     {
+        //         // IF couldn't get reset reason, consider it as power reset
+        //         PWR_Warning( "KERNEL_GetResetReason Failed, Status %d", KERNEL_Status );
+        //         KERNEL_ResetReason = KERNEL_ResetReason_Power;
+        //     }
 
-        // TODO On Power-up Handling
-        // TODO Notify KERNEL of exiting power mode
-        // TODO Restore Modules Contexts/Configurations
+        Instance->Mode = PWR_STM32L496VGT6P_Mode_Run;
     }
     while ( 0 );
 
     return Status;
 }
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_Cycle( PWR_STM32L496VGT6P_t PWRx )
+PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_t PWRx )
 {
     PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
+    HAL_StatusTypeDef HAL_Status = HAL_OK;
 
     do
     {
         PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
 
-        // TODO Determine these operation location, possible location to be into the PORT itself
-        // TODO Retrieve Hardware Status
+        PWR_STM32L496VGT6P_Instance_t * Instance = &PWR_STM32L496VGT6P_Context.Instance[ PWRx ];
 
-        UTIL_UNUSED( PWR_STM32L496VGT6P_Mode_Shutdown );
+        // TODO Verify the following HW lowest power mode checks
+        // TODO MUST be in descending order
+        // - Shutdown (Target)
+        // - Standby
+        // - Stop-2
+        // - Stop-1/0
+        // - Low-Power Sleep
+        // - Low-Power Run
+        // - Sleep
+        // - Run (Default)
+        PWR_STM32L496VGT6P_Mode_t Mode_Lowest = PWR_STM32L496VGT6P_Mode_Shutdown;
 
-        // FIXME Check USB if active
-        //    if(__HAL_RCC_USB_IS_CLK_ENABLED())
-        //    {
-        //      UTIL_UNUSED(PWR_STM32L496VGT6P_Mode_Sleep);
-        //    }
-
-        // FIXME Check ADC if active
-        if ( __HAL_RCC_ADC_IS_CLK_ENABLED( ) )
+        if ( __HAL_RCC_LPTIM1_IS_CLK_ENABLED( ) )
         {
-            UTIL_UNUSED( PWR_STM32L496VGT6P_Mode_LPSleep );
+            // TODO Stop-2 is the lowest possible if
+            // - Low-Power timer-1 is active
+            Mode_Lowest = PWR_STM32L496VGT6P_Mode_Stop2;
         }
 
-        // FIXME Check LPTIM2 if active
         if ( __HAL_RCC_LPTIM2_IS_CLK_ENABLED( ) )
         {
-            UTIL_UNUSED( PWR_STM32L496VGT6P_Mode_Stop2 );
+            // TODO Stop-1 is the lowest possible if
+            // - Low-Power timer-2 is active
+            Mode_Lowest = PWR_STM32L496VGT6P_Mode_Stop1;
         }
 
-        // FIXME Check IO if need to be active (MUST be retained)
-        if ( GPIO_Null )
+        if ( __HAL_RCC_ADC_IS_CLK_ENABLED( ) )
         {
-            UTIL_UNUSED( PWR_STM32L496VGT6P_Mode_Stop2 );
+            // TODO Low-Power Sleep is the lowest possible if
+            // - ADC is active
+            Mode_Lowest = PWR_STM32L496VGT6P_Mode_LPSleep;
         }
 
-        // FIXME Check Kernel performance configuration (Selected Clocks, ...etc)
-        if ( KERNEL_Status_Busy )
+        if ( __HAL_RCC_USB_OTG_FS_IS_CLK_ENABLED( ) || __HAL_RCC_USB_OTG_FS_IS_CLK_SLEEP_ENABLED( ) )
         {
-            UTIL_UNUSED( PWR_STM32L496VGT6P_Mode_Sleep );
+            // TODO Sleep is the lowest possible if
+            // - USB is active
+            Mode_Lowest = PWR_STM32L496VGT6P_Mode_Sleep;
         }
 
-        // TODO Save Modules Contexts
-        // TODO Enter Lowest ALLOWED power mode
-        // TODO On Wake-up Handling
-        // TODO Restore Modules Contexts
-    }
-    while ( 0 );
+        PWR_Debug( "Power mode %d (selected), %d (lowest)", Instance->Mode, Mode_Lowest );
 
-    return Status;
-}
+        if ( Mode_Lowest > Instance->Mode )
+        {
+            PWR_Warning( "Power mode %d could be set to %d", Instance->Mode, Mode_Lowest );
+            // FIXME Power mode could be set to a lower mode
+        }
+        else
+        {
+            PWR_Error( "Power mode %d is below lowest %d ", Instance->Mode, Mode_Lowest );
+            PWR_Warning( "Power mode fall-back from %d to %d", Instance->Mode, Mode_Lowest );
+            Instance->Mode = Mode_Lowest;
+        }
 
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_DeInitialize( PWR_STM32L496VGT6P_t PWRx )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM32L496VGT6P_t PWRx, PWR_STM32L496VGT6P_Mode_t Mode )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( PWRx=%d, Mode=%d )", __FUNCTION__, PWRx, Mode );
-
-        switch ( Mode )
+        switch ( Instance->Mode )
         {
             case PWR_STM32L496VGT6P_Mode_Run:
-                HAL_PWREx_DisableLowPowerRunMode( );
+                if ( ( HAL_Status = HAL_PWREx_DisableLowPowerRunMode( ) ) != HAL_OK )
+                {
+                    // TODO Is there something could be done ?
+                    Status = PWR_STM32L496VGT6P_Status_Error;
+                    break;
+                }
                 break;
 
             case PWR_STM32L496VGT6P_Mode_LPRun:
@@ -292,62 +239,21 @@ static PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Instance_SetMode( PWR_STM3
 
             case PWR_STM32L496VGT6P_Mode_Standby:
                 HAL_PWR_EnterSTANDBYMode( );
+                // code unreachable
+                // previous call is followed by a reset on wake-up
                 break;
 
             case PWR_STM32L496VGT6P_Mode_Shutdown:
                 HAL_PWREx_EnterSHUTDOWNMode( );
+                // code unreachable
+                // previous call is followed by a reset on wake-up
                 break;
 
             default:
                 Status = PWR_STM32L496VGT6P_Status_NotSupported;
                 break;
         }
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-// #############################################################################
-// #### Public Method(s) #######################################################
-// #############################################################################
-
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Initialize( PWR_STM32L496VGT6P_t PWRx )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-
-    do
-    {
-        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
-
-        if ( ( Status = PWR_STM32L496VGT6P_Context_Initialize( ) ) != PWR_STM32L496VGT6P_Status_Success )
-        {
-            break;
-        }
-
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_Initialize( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
-        {
-            break;
-        }
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_Cycle( PWR_STM32L496VGT6P_t PWRx )
-{
-    PWR_STM32L496VGT6P_Status_t Status = PWR_STM32L496VGT6P_Status_Success;
-    do
-    {
-        PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
-
-        if ( ( Status = PWR_STM32L496VGT6P_Context_Cycle( ) ) != PWR_STM32L496VGT6P_Status_Success )
-        {
-            break;
-        }
-
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_Cycle( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
+        if ( Status != PWR_STM32L496VGT6P_Status_Success )
         {
             break;
         }
@@ -364,16 +270,6 @@ PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_DeInitialize( PWR_STM32L496VGT6P_
     do
     {
         PWR_Trace( "%s( PWRx=%d )", __FUNCTION__, PWRx );
-
-        if ( ( Status = PWR_STM32L496VGT6P_Instance_DeInitialize( PWRx ) ) != PWR_STM32L496VGT6P_Status_Success )
-        {
-            break;
-        }
-
-        if ( ( Status = PWR_STM32L496VGT6P_Context_DeInitialize( ) ) != PWR_STM32L496VGT6P_Status_Success )
-        {
-            break;
-        }
     }
     while ( 0 );
 
@@ -388,7 +284,9 @@ PWR_STM32L496VGT6P_Status_t PWR_STM32L496VGT6P_SetMode( PWR_STM32L496VGT6P_t PWR
     {
         PWR_Trace( "%s( PWRx=%d, Mode=%d )", __FUNCTION__, PWRx, Mode );
 
-        Status = PWR_STM32L496VGT6P_Instance_SetMode( PWRx, Mode );
+        PWR_STM32L496VGT6P_Instance_t * Instance = &PWR_STM32L496VGT6P_Context.Instance[ PWRx ];
+
+        Instance->Mode = Mode;
     }
     while ( 0 );
 
